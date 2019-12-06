@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Contact;
+use App\Author;
 use Faker\Generator as Faker;
 
-$factory->define(Contact::class, function (Faker $faker) {
+$factory->define(Author::class, function (Faker $faker) {
     return [
-        //
+        'name' => $faker->name
     ];
 });
