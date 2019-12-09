@@ -28,10 +28,8 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validateData();
-        $data['user_id'] = Auth::user()->id;
-        $book = Book::create($data);
-        
+        $book = request()->user()->books()->create($this->validateData());
+
         BookResource::withoutWrapping();
         return (new BookResource($book))
                 ->response()
