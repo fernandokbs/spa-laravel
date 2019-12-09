@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Book;
 use Illuminate\Http\Request;
+use App\Http\Resources\BookResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class BookController extends Controller
 {
@@ -14,7 +17,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        return BookResource::collection(Book::paginate(10));
     }
 
     /**
@@ -25,7 +28,14 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->validateData();
+        $data['user_id'] = Auth::user()->id;
+        $book = Book::create($data);
+        
+        BookResource::withoutWrapping();
+        return (new BookResource($book))
+                ->response()
+                ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
@@ -36,7 +46,8 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        BookResource::withoutWrapping();
+        return new BookResource($book);
     }
     
     /**
@@ -48,7 +59,10 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        $book->update($request->all());
+        return (new BookResource($contact))
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 
     /**
@@ -59,6 +73,17 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return response([], Response::HTTP_NO_CONTENT);
+    }
+
+    public function validateData()
+    {
+        return request()->validate([
+            'title' => 'required',
+            'content' => 'required',
+            'thumbnail' => 'required',
+            'author_id' => 'required'
+        ]);
     }
 }

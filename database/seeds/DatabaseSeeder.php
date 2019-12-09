@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 use App\Author;
+use App\User;
 use App\Book;
 
 class DatabaseSeeder extends Seeder
@@ -13,7 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(Author::class)->times(6)->create();
+        factory(User::class)->create([
+            'email' => "testroot@gmail.com",
+            'password' => Hash::make("testroot"),
+        ]);
+
+        factory(Author::class)->times(10)->create();
         factory(Book::class)->times(20)->create();
     }
 }
