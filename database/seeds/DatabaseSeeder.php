@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Author;
+use App\Book;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,5 +14,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         factory(Author::class)->times(6)->create();
+        factory(Book::class)->times(20)->create();
     }
 }
