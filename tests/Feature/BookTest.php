@@ -26,7 +26,7 @@ class BookTest extends TestCase
         $author = factory(Author::class)->create();
         $book = factory(Book::class)->create();
         
-        $response = $this->json('GET', '/api/books');
+        $response = $this->json('GET', "/api/books?api_token={$this->user->api_token}");
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -55,7 +55,7 @@ class BookTest extends TestCase
         $author = factory(Author::class)->create();
         $book = factory(Book::class)->create();
 
-        $response = $this->json('GET', "/api/books/{$book->id}");
+        $response = $this->json('GET', "/api/books/{$book->id}?api_token={$this->user->api_token}");
         
         $response
             ->assertStatus(200)
@@ -78,8 +78,6 @@ class BookTest extends TestCase
     /**  @test */
     public function it_creates_a_single_book()
     {
-        $this->withoutExceptionHandling();
-        
         $author = factory(Author::class)->create();
         $this->assertEquals(0, Book::count());
         
@@ -87,7 +85,8 @@ class BookTest extends TestCase
             'title' => 'lorem insu dolor',
             'content' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
             'author_id' => $author->id,
-            'thumbnail' => 'https://picsum.photos/250/500'
+            'thumbnail' => 'https://picsum.photos/250/500',
+            'api_token' => $this->user->api_token
         ];
         
         $response = $this->json('POST', "/api/books", $data);
@@ -99,7 +98,7 @@ class BookTest extends TestCase
     /**  @test */
     public function it_creates_a_single_book_fails()
     {
-        $response = $this->json('POST', "/api/books", []);
+        $response = $this->json('POST', "/api/books", ['api_token' => $this->user->api_token]);
         $response->assertStatus(422)
                 ->assertJson([
                     "message" => "The given data was invalid.",
@@ -115,7 +114,8 @@ class BookTest extends TestCase
 
         $data = [
             'title' => 'Nuevo titulo',
-            'content' => 'Lorem insu dolor'
+            'content' => 'Lorem insu dolor',
+            'api_token' => $this->user->api_token
         ];
 
         $response = $this->json('PUT', "/api/books/{$book->id}", $data);
@@ -131,7 +131,7 @@ class BookTest extends TestCase
         $author = factory(Author::class)->create();
         $book = factory(Book::class)->create();
 
-        $this->json('DELETE', "/api/books/{$book->id}")
+        $this->json('DELETE', "/api/books/{$book->id}",['api_token' => $this->user->api_token])
             ->assertStatus(204);
         
         $this->assertNull(Book::find($book->id));
