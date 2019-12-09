@@ -126,7 +126,7 @@ class BookTest extends TestCase
     }
     
     /**  @test */
-    public function it_deletes_a_single_book()
+    public function the_owner_can_delete_the_book()
     {
         $author = factory(Author::class)->create();
         $book = factory(Book::class)->create();
@@ -135,5 +135,16 @@ class BookTest extends TestCase
             ->assertStatus(204);
         
         $this->assertNull(Book::find($book->id));
+    }
+
+    /**  @test */
+    public function the_owner_can_delete_the_book_fails()
+    {
+        $author = factory(Author::class)->create();
+        $book = factory(Book::class)->create();
+        $user = factory(User::class)->create();
+
+        $this->json('DELETE', "/api/books/{$book->id}",['api_token' => $user->api_token])
+            ->assertStatus(403);
     }
 }

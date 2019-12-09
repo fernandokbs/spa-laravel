@@ -17,6 +17,7 @@ class BookController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Book::class);
         return BookResource::collection(Book::paginate(10));
     }
 
@@ -28,6 +29,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Book::class);
         $book = request()->user()->books()->create($this->validateData());
 
         BookResource::withoutWrapping();
@@ -44,6 +46,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
+        $this->authorize('view', $book);
         BookResource::withoutWrapping();
         return new BookResource($book);
     }
@@ -57,6 +60,8 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
+        $this->authorize('update', $book);
+
         $book->update($request->all());
         return (new BookResource($contact))
             ->response()
@@ -71,6 +76,8 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        $this->authorize('delete', $book);
+
         $book->delete();
         return response([], Response::HTTP_NO_CONTENT);
     }
