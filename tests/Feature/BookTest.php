@@ -17,31 +17,29 @@ class BookTest extends TestCase
     {
         parent::setUp();
         $this->user = factory(User::class)->create();
+        $this->author = factory(Author::class)->create();
+        $this->book = factory(Book::class)->create();
         $this->actingAs($this->user);
     }
 
     /**  @test */
     public function it_shows_a_collection_of_books()
     {
-        $author = factory(Author::class)->create();
-        $book = factory(Book::class)->create();
-        
-        $response = $this->json('GET', "/api/books?api_token={$this->user->api_token}");
-        $response
+        $this->json('GET', "/api/books?api_token={$this->user->api_token}")
             ->assertStatus(200)
             ->assertJson([
                 'data' => [
                     [
-                        'id' => $book->id , 
+                        'id' => $this->book->id , 
                         'attributes' => [
-                            'title' => $book->title,
-                            'description' => $book->content,
-                            'picture' => $book->thumbnail,
-                            'created_at' => $book->created_at->diffForHumans()
+                            'title' => $this->book->title,
+                            'description' => $this->book->content,
+                            'picture' => $this->book->thumbnail,
+                            'created_at' => $this->book->created_at->diffForHumans()
                         ],
                         'relationships' => [
                             'author' => [
-                                'name' => $author->name
+                                'name' => $this->author->name
                             ]
                         ]
                     ]
@@ -52,24 +50,19 @@ class BookTest extends TestCase
     /**  @test */
     public function it_shows_a_single_book()
     {
-        $author = factory(Author::class)->create();
-        $book = factory(Book::class)->create();
-
-        $response = $this->json('GET', "/api/books/{$book->id}?api_token={$this->user->api_token}");
-        
-        $response
+        $this->json('GET', "/api/books/{$this->book->id}?api_token={$this->user->api_token}")
             ->assertStatus(200)
             ->assertJson([
-                'id' => $book->id , 
+                'id' => $this->book->id , 
                 'attributes' => [
-                    'title' => $book->title,
-                    'description' => $book->content,
-                    'picture' => $book->thumbnail,
-                    'created_at' => $book->created_at->diffForHumans()
+                    'title' => $this->book->title,
+                    'description' => $this->book->content,
+                    'picture' => $this->book->thumbnail,
+                    'created_at' => $this->book->created_at->diffForHumans()
                 ],
                 'relationships' => [
                     'author' => [
-                        'name' => $author->name
+                        'name' => $this->author->name
                     ]
                 ]
             ]);
@@ -78,28 +71,26 @@ class BookTest extends TestCase
     /**  @test */
     public function it_creates_a_single_book()
     {
-        $author = factory(Author::class)->create();
-        $this->assertEquals(0, Book::count());
+        $this->assertEquals(1, Book::count());
         
         $data = [
             'title' => 'lorem insu dolor',
-            'content' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
-            'author_id' => $author->id,
+            'content' => 'Lorem Ipsum is simply dummy text of the printing and',
+            'author_id' => $this->author->id,
             'thumbnail' => 'https://picsum.photos/250/500',
             'api_token' => $this->user->api_token
         ];
         
-        $response = $this->json('POST', "/api/books", $data);
-        $response->assertStatus(201);
-
-        $this->assertEquals(1, Book::count());
+        $this->json('POST', "/api/books", $data)
+            ->assertStatus(201);
+        $this->assertEquals(2, Book::count());
     }
 
     /**  @test */
     public function it_creates_a_single_book_fails()
     {
-        $response = $this->json('POST', "/api/books", ['api_token' => $this->user->api_token]);
-        $response->assertStatus(422)
+        $this->json('POST', "/api/books", ['api_token' => $this->user->api_token])
+                ->assertStatus(422)
                 ->assertJson([
                     "message" => "The given data was invalid.",
                     "errors" => []
@@ -109,18 +100,14 @@ class BookTest extends TestCase
     /**  @test */
     public function it_updates_a_single_book()
     {
-        $author = factory(Author::class)->create();
-        $book = factory(Book::class)->create();
-
         $data = [
             'title' => 'Nuevo titulo',
             'content' => 'Lorem insu dolor',
             'api_token' => $this->user->api_token
         ];
 
-        $response = $this->json('PUT', "/api/books/{$book->id}", $data);
-        $book = Book::find($book->id);
-
+        $this->json('PUT', "/api/books/{$this->book->id}", $data);
+        $book = Book::find($this->book->id);
         $this->assertEquals($data['title'], $book->title);
         $this->assertEquals($data['content'], $book->content);
     }
@@ -128,32 +115,23 @@ class BookTest extends TestCase
     /**  @test */
     public function the_owner_can_delete_the_book()
     {
-        $author = factory(Author::class)->create();
-        $book = factory(Book::class)->create();
-
-        $this->json('DELETE', "/api/books/{$book->id}",['api_token' => $this->user->api_token])
+        $this->json('DELETE', "/api/books/{$this->book->id}",['api_token' => $this->user->api_token])
             ->assertStatus(204);
-        
-        $this->assertNull(Book::find($book->id));
+        $this->assertNull(Book::find($this->book->id));
     }
 
     /**  @test */
     public function the_owner_can_delete_the_book_fails()
     {
-        $author = factory(Author::class)->create();
-        $book = factory(Book::class)->create();
         $user = factory(User::class)->create();
-
-        $this->json('DELETE', "/api/books/{$book->id}",['api_token' => $user->api_token])
+        $this->json('DELETE', "/api/books/{$this->book->id}",['api_token' => $user->api_token])
             ->assertStatus(403);
     }
     
     /**  @test */
     public function user_can_add_a_comment_on_a_book()
     {
-        $author = factory(Author::class)->create();
-        $book = factory(Book::class)->create();
-        $this->assertEquals(0, $book->comments()->count());
+        $this->assertEquals(0, $this->book->comments()->count());
 
         $data = [
             'title' => 'Lorem Ipsum is simply dummy text',
@@ -162,9 +140,9 @@ class BookTest extends TestCase
             'api_token' => $this->user->api_token
         ];
 
-        $response = $this->json('POST', "/api/books/{$book->id}/comment", $data);
+        $response = $this->json('POST', "/api/books/{$this->book->id}/comment", $data);
         $response->assertStatus(201);
 
-        $this->assertEquals(1, $book->comments()->count());
+        $this->assertEquals(1, $this->book->comments()->count());
     }
 }
