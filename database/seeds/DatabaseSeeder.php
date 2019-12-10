@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
+use App\Comment;
 use App\Author;
 use App\User;
 use App\Book;
@@ -22,5 +23,6 @@ class DatabaseSeeder extends Seeder
 
         factory(Author::class)->times(10)->create();
         factory(Book::class)->times(20)->create();
+        factory(Comment::class)->times(10)->create();
     }
 }

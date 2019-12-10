@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\Book;
+use App\Comment;
 use Illuminate\Http\Request;
 use App\Http\Resources\BookResource;
+use App\Http\Resources\CommentResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class BookController extends Controller
@@ -77,11 +79,39 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         $this->authorize('delete', $book);
-
         $book->delete();
         return response([], Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     *  Store a newly created resource in storage.
+     *
+     * @param  \App\Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function comment(Request $request, Book $book)
+    {
+        $request->validate([
+            'title' => 'required',
+            'content' => 'required',
+            'score' => 'required'
+        ]);
+
+        $data = $request->all();
+        $data['user_id'] = $request->user()->id;
+        $comment = $book->comments()->create($data);
+        
+        CommentResource::withoutWrapping();
+        return (new CommentResource($comment))
+                ->response()
+                ->setStatusCode(Response::HTTP_CREATED);
+    }
+
+    public function comments(Book $book)
+    {
+        return CommentResource::collection($book->comments);
+    }
+    
     public function validateData()
     {
         return request()->validate([

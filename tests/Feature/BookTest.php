@@ -147,4 +147,24 @@ class BookTest extends TestCase
         $this->json('DELETE', "/api/books/{$book->id}",['api_token' => $user->api_token])
             ->assertStatus(403);
     }
+    
+    /**  @test */
+    public function user_can_add_a_comment_on_a_book()
+    {
+        $author = factory(Author::class)->create();
+        $book = factory(Book::class)->create();
+        $this->assertEquals(0, $book->comments()->count());
+
+        $data = [
+            'title' => 'Lorem Ipsum is simply dummy text',
+            'content' => 'Lorem Ipsum is simply dummy text Lorem Ipsum is simply dummy text',
+            'score' => 4,
+            'api_token' => $this->user->api_token
+        ];
+
+        $response = $this->json('POST', "/api/books/{$book->id}/comment", $data);
+        $response->assertStatus(201);
+
+        $this->assertEquals(1, $book->comments()->count());
+    }
 }
