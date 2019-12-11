@@ -31,6 +31,7 @@ class BookTest extends TestCase
                 'data' => [
                     [
                         'id' => $this->book->id , 
+                        'slug' => $this->book->slug,
                         'attributes' => [
                             'title' => $this->book->title,
                             'description' => $this->book->content,
@@ -50,7 +51,7 @@ class BookTest extends TestCase
     /**  @test */
     public function it_shows_a_single_book()
     {
-        $this->json('GET', "/api/books/{$this->book->id}?api_token={$this->user->api_token}")
+        $this->json('GET', "/api/books/{$this->book->slug}?api_token={$this->user->api_token}")
             ->assertStatus(200)
             ->assertJson([
                 'id' => $this->book->id , 
@@ -106,7 +107,7 @@ class BookTest extends TestCase
             'api_token' => $this->user->api_token
         ];
 
-        $this->json('PUT', "/api/books/{$this->book->id}", $data);
+        $this->json('PUT', "/api/books/{$this->book->slug}", $data);
         $book = Book::find($this->book->id);
         $this->assertEquals($data['title'], $book->title);
         $this->assertEquals($data['content'], $book->content);
@@ -115,7 +116,7 @@ class BookTest extends TestCase
     /**  @test */
     public function the_owner_can_delete_the_book()
     {
-        $this->json('DELETE', "/api/books/{$this->book->id}",['api_token' => $this->user->api_token])
+        $this->json('DELETE', "/api/books/{$this->book->slug}",['api_token' => $this->user->api_token])
             ->assertStatus(204);
         $this->assertNull(Book::find($this->book->id));
     }
@@ -124,7 +125,7 @@ class BookTest extends TestCase
     public function the_owner_can_delete_the_book_fails()
     {
         $user = factory(User::class)->create();
-        $this->json('DELETE', "/api/books/{$this->book->id}",['api_token' => $user->api_token])
+        $this->json('DELETE', "/api/books/{$this->book->slug}",['api_token' => $user->api_token])
             ->assertStatus(403);
     }
     
@@ -140,7 +141,7 @@ class BookTest extends TestCase
             'api_token' => $this->user->api_token
         ];
 
-        $response = $this->json('POST', "/api/books/{$this->book->id}/comment", $data);
+        $response = $this->json('POST', "/api/books/{$this->book->slug}/comment", $data);
         $response->assertStatus(201);
 
         $this->assertEquals(1, $this->book->comments()->count());
