@@ -6,7 +6,7 @@
                 <router-link to="/about">About</router-link>
             </div>
             <div class="flex flex-col flex-1 h-screen overflow-y-hidden">
-                <router-view></router-view>
+                <router-view class="p-6"></router-view>
             </div>
         </div>
     </div>
