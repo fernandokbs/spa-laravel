@@ -1870,10 +1870,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -19572,19 +19575,32 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("h1", [_vm._v("App")]),
+  return _c("div", { staticClass: "h-screen bg-white" }, [
+    _c("div", { staticClass: "flex" }, [
+      _c(
+        "div",
+        {
+          staticClass:
+            "pl-6 bg-blue-900 w-48 h-screen border-r-2 border-blue-300"
+        },
+        [
+          _c("router-link", { staticClass: "text-white", attrs: { to: "/" } }, [
+            _vm._v("Home")
+          ]),
+          _vm._v(" "),
+          _c("router-link", { attrs: { to: "/about" } }, [_vm._v("About")])
+        ],
+        1
+      ),
       _vm._v(" "),
-      _c("router-view"),
-      _vm._v(" "),
-      _c("router-link", { attrs: { to: "/" } }, [_vm._v("Home")]),
-      _vm._v(" "),
-      _c("router-link", { attrs: { to: "/about" } }, [_vm._v("About")])
-    ],
-    1
-  )
+      _c(
+        "div",
+        { staticClass: "flex flex-col flex-1 h-screen overflow-y-hidden" },
+        [_c("router-view")],
+        1
+      )
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
