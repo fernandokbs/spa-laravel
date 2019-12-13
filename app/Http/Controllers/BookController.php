@@ -20,7 +20,7 @@ class BookController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Book::class);
-        return BookResource::collection(Book::paginate(10));
+        return BookResource::collection(Book::paginate(3));
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BookResource extends JsonResource
@@ -18,9 +19,11 @@ class BookResource extends JsonResource
         [
             'id' => $this->id,
             'slug' => $this->slug,
+            'score' => $this->score(),
+            'comments' => $this->countComments(),
             'attributes' => [
                 'title' => $this->title,
-                'description' => $this->content,
+                'description' => Str::limit($this->content, 50),
                 'picture' => $this->thumbnail,
                 'created_at' => $this->created_at->diffForHumans()
             ],

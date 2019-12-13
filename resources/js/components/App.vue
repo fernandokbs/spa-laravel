@@ -1,9 +1,10 @@
 <template>
     <div class="h-screen bg-white">
         <div class="flex">
-            <div class="pl-6 bg-blue-900 w-48 h-screen border-r-2 border-blue-300">
-                <router-link to="/" class="text-white">Home</router-link>
-                <router-link to="/about">About</router-link>
+            <div class="py-6 bg-blue-900 w-48 h-screen border-r-2 border-blue-300 text-lg">
+                <router-link to="/" class="text-white flex flex-1 justify-center py-4">Books</router-link>
+                <router-link to="/home" class="text-white flex flex-1 justify-center py-4">Home</router-link>
+                <router-link to="/about" class="text-white flex flex-1 justify-center py-4">About</router-link>
             </div>
             <div class="flex flex-col flex-1 h-screen overflow-y-hidden">
                 <router-view class="p-6"></router-view>
@@ -14,6 +15,11 @@
 
 <script>
     export default {
-        mounted() {}
+        props: ['user'],
+
+        created() {
+            window.token = this.user.api_token;
+            console.log(this.user);
+        }
     }
 </script>

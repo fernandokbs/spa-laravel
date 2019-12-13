@@ -23,6 +23,17 @@ class Book extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function countComments()
+    {
+        return $this->comments->count();
+    }
+
+    public function score()
+    {
+        $score = $this->comments->pluck('score');
+        return  $score->count() > 0 ? ($score->sum() / $score->count()) : 0;
+    }
+
     public function getRouteKeyName()
     {
         return 'slug';

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 use App\Book;
 use App\User;
@@ -34,7 +35,7 @@ class BookTest extends TestCase
                         'slug' => $this->book->slug,
                         'attributes' => [
                             'title' => $this->book->title,
-                            'description' => $this->book->content,
+                            'description' => Str::limit($this->book->content, 50),
                             'picture' => $this->book->thumbnail,
                             'created_at' => $this->book->created_at->diffForHumans()
                         ],
@@ -57,7 +58,7 @@ class BookTest extends TestCase
                 'id' => $this->book->id , 
                 'attributes' => [
                     'title' => $this->book->title,
-                    'description' => $this->book->content,
+                    'description' => Str::limit($this->book->content, 50),
                     'picture' => $this->book->thumbnail,
                     'created_at' => $this->book->created_at->diffForHumans()
                 ],
