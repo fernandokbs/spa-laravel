@@ -1867,9 +1867,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     window.token = this.user.api_token;
     axios.interceptors.request.use(function (config) {
       console.log(config);
-      if (config.method === "get") config.url = config.url + "?api_token=" + _this.user.api_token;else config.data = _objectSpread({
+
+      if (config.method === "get") {
+        var page = '';
+
+        if (config.url.match(/\?./)) {
+          var url = config.url.split('?');
+          var _page = url[1];
+          url = url[0];
+          config.url = "".concat(url, "?api_token=").concat(_this.user.api_token, "&").concat(_page);
+          return config;
+        }
+
+        config.url = "".concat(config.url, "?api_token=").concat(_this.user.api_token);
+      } else config.data = _objectSpread({
         api_token: _this.user.api_token
       }, config.data);
+
       return config;
     });
   }
@@ -1909,6 +1923,18 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1935,21 +1961,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      books: []
+      books: [],
+      endpoint: '',
+      pagination: {}
     };
   },
   created: function created() {
+    this.endpoint = '/api/books';
     this.fetchBooks();
   },
   methods: {
     fetchBooks: function fetchBooks() {
       var _this = this;
 
-      axios.get("/api/books").then(function (response) {
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.endpoint;
+      axios.get(page).then(function (response) {
         _this.books = response.data.data;
+
+        _this.makePagination(_objectSpread({}, response.data.meta, {}, response.data.links));
       })["catch"](function (e) {
         console.log(e);
       });
+    },
+    makePagination: function makePagination(data) {
+      this.pagination = data;
+    },
+    doPagination: function doPagination(page) {
+      this.fetchBooks("".concat(this.endpoint, "?page=").concat(page));
     }
   }
 });
@@ -19724,47 +19762,68 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "flex flex-wrap" },
-    _vm._l(_vm.books, function(book) {
-      return _c(
-        "div",
-        {
-          key: book.id,
-          staticClass: "max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4"
-        },
-        [
-          _c("img", {
-            staticClass: "w-full",
-            attrs: {
-              src: book.attributes.picture,
-              alt: "Sunset in the mountains"
-            }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "px-6 py-4" }, [
-            _c("div", { staticClass: "font-bold text-xl mb-2" }, [
-              _vm._v(_vm._s(book.attributes.title))
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "flex flex-wrap" },
+      _vm._l(_vm.books, function(book) {
+        return _c(
+          "div",
+          {
+            key: book.id,
+            staticClass: "max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4"
+          },
+          [
+            _c("img", {
+              staticClass: "w-full",
+              attrs: {
+                src: book.attributes.picture,
+                alt: "Sunset in the mountains"
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "px-6 py-4" }, [
+              _c("div", { staticClass: "font-bold text-xl mb-2" }, [
+                _vm._v(_vm._s(book.attributes.title))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "text-gray-700 text-base" }, [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(book.attributes.description) +
+                    " ...\n                "
+                )
+              ])
             ]),
             _vm._v(" "),
-            _c("p", { staticClass: "text-gray-700 text-base" }, [
-              _vm._v(
-                "\n                " +
-                  _vm._s(book.attributes.description) +
-                  " ...\n            "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _vm._m(0, true),
-          _vm._v(" "),
-          _c("button", { on: { click: _vm.post } }, [_vm._v("click")])
-        ]
-      )
-    }),
-    0
-  )
+            _vm._m(0, true)
+          ]
+        )
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c(
+      "ul",
+      { staticClass: "flex justify-center" },
+      _vm._l(_vm.pagination.last_page, function(page) {
+        return _c("li", { key: page, staticClass: "py-2 px-2 " }, [
+          _c(
+            "button",
+            {
+              on: {
+                click: function($event) {
+                  return _vm.doPagination(page)
+                }
+              }
+            },
+            [_vm._v(_vm._s(page))]
+          )
+        ])
+      }),
+      0
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
