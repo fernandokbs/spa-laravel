@@ -15,6 +15,8 @@
                 <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">#travel</span>
                 <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">#winter</span>
             </div>
+
+            <button @click="post">click</button>
         </div>
     </div>
 </template>
@@ -33,14 +35,13 @@
 
         methods: {
             fetchBooks() {
-                axios.get(`/api/books?api_token=${window.token}`)
+                axios.get(`/api/books`)
                     .then(response => {
                         this.books = response.data.data;
-                        console.log(this.books);
                     }).catch(e => {
                         console.log(e);
                     });
-            }
+            },
         }
     }
 </script>

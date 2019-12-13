@@ -19,7 +19,19 @@
 
         created() {
             window.token = this.user.api_token;
-            console.log(this.user);
+
+            axios.interceptors.request.use((config) => {
+                console.log(config);
+                if(config.method === "get")
+                    config.url = config.url + "?api_token=" + this.user.api_token;
+                else
+                    config.data = {
+                        api_token: this.user.api_token,
+                        ...config.data
+                    }
+
+                return config;
+            });
         }
     }
 </script>

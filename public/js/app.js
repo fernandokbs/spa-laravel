@@ -1838,6 +1838,12 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -1856,8 +1862,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user'],
   created: function created() {
+    var _this = this;
+
     window.token = this.user.api_token;
-    console.log(this.user);
+    axios.interceptors.request.use(function (config) {
+      console.log(config);
+      if (config.method === "get") config.url = config.url + "?api_token=" + _this.user.api_token;else config.data = _objectSpread({
+        api_token: _this.user.api_token
+      }, config.data);
+      return config;
+    });
   }
 });
 
@@ -1916,6 +1930,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1929,9 +1945,8 @@ __webpack_require__.r(__webpack_exports__);
     fetchBooks: function fetchBooks() {
       var _this = this;
 
-      axios.get("/api/books?api_token=".concat(window.token)).then(function (response) {
+      axios.get("/api/books").then(function (response) {
         _this.books = response.data.data;
-        console.log(_this.books);
       })["catch"](function (e) {
         console.log(e);
       });
@@ -19742,7 +19757,9 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm._m(0, true)
+          _vm._m(0, true),
+          _vm._v(" "),
+          _c("button", { on: { click: _vm.post } }, [_vm._v("click")])
         ]
       )
     }),
