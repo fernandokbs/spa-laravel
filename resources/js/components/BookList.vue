@@ -46,6 +46,7 @@
             fetchBooks(page = this.endpoint) {
                 axios.get(page)
                     .then(response => {
+                        console.log(response);
                         this.books = response.data.data;
                         this.makePagination({ ...response.data.meta, ...response.data.links })
                     }).catch(e => {

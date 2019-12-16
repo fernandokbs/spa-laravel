@@ -111,6 +111,12 @@ class BookController extends Controller
     {
         return CommentResource::collection($book->comments);
     }
+
+    public function myBooks()
+    {
+        $user = Auth::user();
+        return BookResource::collection($user->books()->paginate(3)); 
+    }
     
     public function validateData()
     {

@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Book;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Collection;
 use App\Observers\BookObserver;
 
 class AppServiceProvider extends ServiceProvider
