@@ -3,8 +3,8 @@
         <template v-if="book.attributes">
             <div class="font-sans container">
                 
-                <div v-if="can" class="text-right">
-                    <button class="bg-red-500 py-4 px-4 text-white rounded">Eliminar</button>
+                <div v-if="can()" class="text-right">
+                    <button @click="destroy" class="bg-red-500 py-4 px-4 text-white rounded">Eliminar</button>
                     <button class="bg-blue-500 py-4 px-4 text-white rounded">Edit</button>
                 </div>
 				
@@ -34,18 +34,26 @@
                 axios.get(`/api/books/${this.$route.params.slug}`)
                     .then(response => {
                         this.book = response.data;
+                        console.log(this.book);
                     })
-                    .catch(err => {
-                        console.log(err);
+                    .catch(error => {
+                        if (error.response.status === 404)
+                            this.$router.push({ name: 'notFound' });
                     });
             },
 
             can() {
-                return $book.id === window.id;
+                return this.book.user_id === window.id;
             },
 
-            delete() {
-                
+            destroy() {
+                axios.delete(`/api/books/${this.book.slug}`)
+                    .then(response => {
+                        this.$router.push({ path: '/my_books' });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             },
 
             edit() {

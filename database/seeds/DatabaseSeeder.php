@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make("testroot"),
         ]);
 
+        factory(User::class)->create();
         factory(Author::class)->times(10)->create();
         factory(Book::class)->times(20)->create();
         factory(Comment::class)->times(10)->create();

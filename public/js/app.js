@@ -2121,14 +2121,27 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get("/api/books/".concat(this.$route.params.slug)).then(function (response) {
         _this.book = response.data;
-      })["catch"](function (err) {
-        console.log(err);
+        console.log(_this.book);
+      })["catch"](function (error) {
+        if (error.response.status === 404) _this.$router.push({
+          name: 'notFound'
+        });
       });
     },
     can: function can() {
-      return $book.id === window.id;
+      return this.book.user_id === window.id;
     },
-    "delete": function _delete() {},
+    destroy: function destroy() {
+      var _this2 = this;
+
+      axios["delete"]("/api/books/".concat(this.book.slug)).then(function (response) {
+        _this2.$router.push({
+          path: '/my_books'
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     edit: function edit() {}
   }
 });
@@ -20050,7 +20063,7 @@ var render = function() {
       "div",
       {
         staticClass:
-          "container justify-center w-full flex flex-wrap mx-auto px-2 pt-8 lg:pt-16 mt-16"
+          "container justify-center w-full flex flex-wrap mx-auto px-2 pt-2 lg:pt-16 mt-2"
       },
       [
         _c(
@@ -20275,12 +20288,13 @@ var render = function() {
       _vm.book.attributes
         ? [
             _c("div", { staticClass: "font-sans container" }, [
-              _vm.can
+              _vm.can()
                 ? _c("div", { staticClass: "text-right" }, [
                     _c(
                       "button",
                       {
-                        staticClass: "bg-red-500 py-4 px-4 text-white rounded"
+                        staticClass: "bg-red-500 py-4 px-4 text-white rounded",
+                        on: { click: _vm.destroy }
                       },
                       [_vm._v("Eliminar")]
                     ),
@@ -20420,9 +20434,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "my-64" }, [
-      _c("h1", { staticClass: "text-center text-6xl font-medium" }, [
-        _vm._v("Page was not found")
+    return _c("div", { staticClass: "my-32" }, [
+      _c("h1", { staticClass: "text-center text-4xl font-medium" }, [
+        _vm._v("404 not found")
       ])
     ])
   }
@@ -35706,7 +35720,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
   routes: [{
-    path: '',
+    path: '/',
     component: _views_BookIndex__WEBPACK_IMPORTED_MODULE_5__["default"]
   }, {
     path: '/home',
@@ -35723,7 +35737,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
     name: 'show'
   }, {
     path: '*',
-    component: _views_NotFound__WEBPACK_IMPORTED_MODULE_4__["default"]
+    component: _views_NotFound__WEBPACK_IMPORTED_MODULE_4__["default"],
+    name: 'notFound'
   }]
 }));
 

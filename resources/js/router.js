@@ -12,11 +12,11 @@ Vue.use(VueRouter);
 export default new VueRouter({
     mode: 'history',
     routes: [
-        { path: '', component: BookIndex },
+        { path: '/', component: BookIndex },
         { path: '/home', component: Home },
         { path: '/my_books', component: MyBooks },
         { path: '/about', component: About },
         { path: '/books/:slug', component: BookShow, name: 'show' },
-        { path: '*', component: NotFound }
+        { path: '*', component: NotFound, name: 'notFound' }
     ]
 });

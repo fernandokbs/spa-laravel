@@ -46,7 +46,7 @@
          </div>
       </nav>
 
-    <div class="container justify-center w-full flex flex-wrap mx-auto px-2 pt-8 lg:pt-16 mt-16">
+    <div class="container justify-center w-full flex flex-wrap mx-auto px-2 pt-2 lg:pt-16 mt-2">
          <div class="w-full p-8 mt-6 text-gray-900">
             <router-view></router-view>
          </div>
