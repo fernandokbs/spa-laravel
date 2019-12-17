@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BookResource extends JsonResource
@@ -15,6 +16,8 @@ class BookResource extends JsonResource
      */
     public function toArray($request)
     {
+        $action = explode('@',Route::currentRouteAction())[1];
+        
         return 
         [
             'id' => $this->id,
@@ -23,7 +26,7 @@ class BookResource extends JsonResource
             'comments' => $this->countComments(),
             'attributes' => [
                 'title' => $this->title,
-                'description' => Str::limit($this->content, 50),
+                'description' => ($action === "show" ? $this->content : Str::limit($this->content, 50)),
                 'picture' => $this->thumbnail,
                 'created_at' => $this->created_at->diffForHumans()
             ],

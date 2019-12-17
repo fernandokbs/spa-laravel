@@ -12,7 +12,7 @@ $factory->define(Book::class, function (Faker $faker) {
         'title' => $faker->sentence($nbWords = 5, $variableNbWords = true),
         'author_id' => Author::all()->random(),
         'user_id' => User::all()->random(),
-        'content' => $faker->text($maxNbChars = 300),
+        'content' => $faker->text($maxNbChars = 1200),
         'thumbnail' => 'https://picsum.photos/250/200'
     ];
 });

@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div class="flex flex-wrap">
-            <div v-for="book of books" :key="book.id" class="max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4">
-
+        <div class="flex flex-wrap justify-center">
+            <div @click="show(book.slug)" v-for="book of books" :key="book.id" class="max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4">
                 <img class="w-full" :src="book.attributes.picture" alt="Sunset in the mountains">
                 <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">{{ book.attributes.title }}</div>
@@ -60,6 +59,17 @@
 
             doPagination(page) {
                 this.fetchBooks(`${this.endpoint}?page=${page}`);
+            },
+
+            show(slug) {
+                console.log(slug);
+                this.$router.push({ name: 'show', params: { slug } });
+            }
+        },
+
+        directives: {
+            can: {
+
             }
         }
     }

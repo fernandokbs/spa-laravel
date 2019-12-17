@@ -63,7 +63,7 @@
             }
         </style>
     </head>
-    <body>
+    <body class="bg-gray-100 tracking-wider tracking-normal">
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
