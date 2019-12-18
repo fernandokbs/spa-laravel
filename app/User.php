@@ -46,4 +46,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function getApiData()
+    {
+        return [
+            "id" => $this->id,
+            "api_token" => $this->api_token
+        ];
+    }
 }

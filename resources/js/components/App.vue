@@ -18,28 +18,23 @@
             </div>
             <div class="w-full flex-grow lg:flex  lg:content-center lg:items-center lg:w-auto hidden lg:block mt-2 lg:mt-0 z-20" id="nav-content">
                <div class="flex-1 w-full mx-auto max-w-sm content-center py-4 lg:py-0">
-                  <div class="relative pull-right pl-4 pr-4 md:pr-0">
-                     <input type="search" placeholder="Search" class="w-full bg-gray-100 text-sm text-gray-800 transition border focus:outline-none focus:border-purple-500 rounded py-1 px-2 pl-10 appearance-none leading-normal">
-                     <div class="absolute search-icon" style="top: 0.375rem;left: 1.75rem;">
-                        <svg class="fill-current pointer-events-none text-gray-800 w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                           <path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"></path>
-                        </svg>
-                     </div>
-                  </div>
                </div>
                <ul class="list-reset lg:flex justify-end items-center">
+                  <li class="mr-3 py-2 lg:py-0">
+                     <router-link to="/" class="inline-block py-2 px-4 text-gray-900 font-bold no-underline">Home</router-link>
+                  </li>
                   <li class="mr-3 py-2 lg:py-0">
                     <router-link to="/my_books" class="inline-block py-2 px-4 text-gray-900 font-bold no-underline">My Books</router-link>
                   </li>
                   <li class="mr-3 py-2 lg:py-0">
-                     <router-link to="/home" class="inline-block py-2 px-4 text-gray-900 font-bold no-underline">Home</router-link>
+                     <router-link to="/home" class="inline-block py-2 px-4 text-gray-900 font-bold no-underline">Lorem</router-link>
                   </li>
                   <li class="mr-3 py-2 lg:py-0">
                     <router-link to="/about" class="inline-block py-2 px-4 text-gray-900 font-bold no-underline">About</router-link>
                   </li>
 
                   <li class="mr-3 py-2 lg:py-0">
-                    <router-link to="#" class="inline-block py-2 px-4 text-gray-900 font-bold no-underline">Logout</router-link>
+                    <router-link to="#" v-on:click.native="logout" class="inline-block py-2 px-4 text-gray-900 font-bold no-underline">Logout</router-link>
                   </li>
                </ul>
             </div>
@@ -63,7 +58,6 @@
             window.id = this.user.id;
 
             axios.interceptors.request.use((config) => {
-                console.log(config);
                 if(config.method === "get") {
                     let page = '';
 
@@ -83,9 +77,18 @@
                         api_token: this.user.api_token,
                         ...config.data
                     }
-
+               
                 return config;
             });
+        },
+
+        methods: {
+           logout() {
+                axios.post('/logout')
+                .catch(error => {
+                     window.location.href = '/login';
+               });
+           }
         }
     }
 </script>

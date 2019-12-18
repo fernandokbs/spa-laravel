@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-    <App :user="{{ auth()->user() }}"></App>
+    <App :user='@json(auth()->user()->getApiData())'></App>
 @endsection

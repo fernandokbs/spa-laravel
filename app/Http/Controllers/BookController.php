@@ -65,7 +65,7 @@ class BookController extends Controller
         $this->authorize('update', $book);
 
         $book->update($request->all());
-        return (new BookResource($contact))
+        return (new BookResource(Book::find($book->id)))
             ->response()
             ->setStatusCode(Response::HTTP_OK);
     }

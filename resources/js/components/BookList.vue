@@ -6,7 +6,7 @@
                 <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">{{ book.attributes.title }}</div>
                     <p class="text-gray-700 text-base">
-                        {{ book.attributes.description }} ...
+                        {{ book.attributes.content }} ...
                     </p>
                 </div>
 
@@ -21,7 +21,7 @@
         <ul class="flex justify-center">
             <li v-for="page in pagination.last_page" :key="page"
                 class="py-2 px-2 "
-            ><button @click="doPagination(page)">{{ page }}</button></li>
+            ><button @click="doPagination(page)" class="px-4 py-4 text-white bg-blue-400 rounded">{{ page }}</button></li>
         </ul>
     </div>
 </template>
@@ -45,7 +45,6 @@
             fetchBooks(page = this.endpoint) {
                 axios.get(page)
                     .then(response => {
-                        console.log(response);
                         this.books = response.data.data;
                         this.makePagination({ ...response.data.meta, ...response.data.links })
                     }).catch(e => {
@@ -62,15 +61,8 @@
             },
 
             show(slug) {
-                console.log(slug);
                 this.$router.push({ name: 'show', params: { slug } });
             }
         },
-
-        directives: {
-            can: {
-
-            }
-        }
     }
 </script>

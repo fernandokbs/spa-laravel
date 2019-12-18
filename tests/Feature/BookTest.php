@@ -35,7 +35,7 @@ class BookTest extends TestCase
                         'slug' => $this->book->slug,
                         'attributes' => [
                             'title' => $this->book->title,
-                            'description' => Str::limit($this->book->content, 50),
+                            'content' => Str::limit($this->book->content, 50),
                             'picture' => $this->book->thumbnail,
                             'created_at' => $this->book->created_at->diffForHumans()
                         ],
@@ -58,7 +58,7 @@ class BookTest extends TestCase
                 'id' => $this->book->id , 
                 'attributes' => [
                     'title' => $this->book->title,
-                    'description' => Str::limit($this->book->content, 50),
+                    'content' => Str::limit($this->book->content, 50),
                     'picture' => $this->book->thumbnail,
                     'created_at' => $this->book->created_at->diffForHumans()
                 ],

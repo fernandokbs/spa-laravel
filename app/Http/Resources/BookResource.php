@@ -27,7 +27,7 @@ class BookResource extends JsonResource
             'comments' => $this->countComments(),
             'attributes' => [
                 'title' => $this->title,
-                'description' => ($action === "show" ? $this->content : Str::limit($this->content, 50)),
+                'content' => ($action === "show" ? $this->content : Str::limit($this->content, 50)),
                 'picture' => $this->thumbnail,
                 'created_at' => $this->created_at->diffForHumans()
             ],
