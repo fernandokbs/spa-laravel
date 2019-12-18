@@ -32,10 +32,10 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Article::class);
-        $Article = request()->user()->Articles()->create($this->validateData());
+        $article = request()->user()->Articles()->create($this->validateData());
 
         ArticleResource::withoutWrapping();
-        return (new ArticleResource($Article))
+        return (new ArticleResource($article))
                 ->response()
                 ->setStatusCode(Response::HTTP_CREATED);
     }
@@ -46,11 +46,11 @@ class ArticleController extends Controller
      * @param  \App\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $Article)
+    public function show(Article $article)
     {
-        $this->authorize('view', $Article);
+        $this->authorize('view', $article);
         ArticleResource::withoutWrapping();
-        return new ArticleResource($Article);
+        return new ArticleResource($article);
     }
     
     /**
@@ -60,12 +60,12 @@ class ArticleController extends Controller
      * @param  \App\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Article $Article)
+    public function update(Request $request, Article $article)
     {
-        $this->authorize('update', $Article);
+        $this->authorize('update', $article);
 
-        $Article->update($this->validateData());
-        return (new ArticleResource(Article::find($Article->id)))
+        $article->update($this->validateData());
+        return (new ArticleResource(Article::find($article->id)))
             ->response()
             ->setStatusCode(Response::HTTP_OK);
     }
@@ -76,10 +76,10 @@ class ArticleController extends Controller
      * @param  \App\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $Article)
+    public function destroy(Article $article)
     {
-        $this->authorize('delete', $Article);
-        $Article->delete();
+        $this->authorize('delete', $article);
+        $article->delete();
         return response([], Response::HTTP_NO_CONTENT);
     }
 
@@ -89,7 +89,7 @@ class ArticleController extends Controller
      * @param  \App\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function comment(Request $request, Article $Article)
+    public function comment(Request $request, Article $article)
     {
         $request->validate([
             'title' => 'required',
@@ -99,8 +99,7 @@ class ArticleController extends Controller
 
         $data = $request->all();
         $data['user_id'] = $request->user()->id;
-        $comment = $Article->comments()->create($data);
-        
+        $comment = $article->comments()->create($data);
         CommentResource::withoutWrapping();
         return (new CommentResource($comment))
                 ->response()

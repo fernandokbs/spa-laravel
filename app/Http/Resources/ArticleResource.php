@@ -23,16 +23,11 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'slug' => $this->slug,
-            'score' => $this->score(),
-            'comments' => $this->countComments(),
             'attributes' => [
                 'title' => $this->title,
                 'content' => ($action === "show" ? $this->content : Str::limit($this->content, 50)),
                 'picture' => $this->thumbnail,
                 'created_at' => $this->created_at->diffForHumans()
-            ],
-            'relationships' =>  [
-                'author' => new AuthorResource($this->author)
             ],
         ];
     }
