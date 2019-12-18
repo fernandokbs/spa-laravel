@@ -1962,6 +1962,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['action', 'book'],
   data: function data() {
@@ -1975,17 +1982,12 @@ __webpack_require__.r(__webpack_exports__);
       if (this.action === 'edit') this.updateBook();else this.createBook();
     },
     createBook: function createBook() {
-      axios.post('/api/books', this.book.attributes).then(function (response) {
-        console.log(response);
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    updateBook: function updateBook() {
       var _this = this;
 
-      axios.put("/api/books/".concat(this.book.slug), this.book.attributes).then(function (response) {
-        var slug = response.data.data.slug;
+      this.book.attributes.thumbnail = 'https://picsum.photos/250/200';
+      axios.post('/api/books', this.book.attributes).then(function (response) {
+        console.log(response.data);
+        var slug = response.data.slug;
 
         _this.$router.push({
           name: 'show',
@@ -1994,10 +1996,33 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
       })["catch"](function (error) {
-        console.log(error);
+        if (error.response.status === 422) _this.getErrors(error.response.data.errors);
       });
     },
-    getErrors: function getErrors(errors) {}
+    updateBook: function updateBook() {
+      var _this2 = this;
+
+      axios.put("/api/books/".concat(this.book.slug), this.book.attributes).then(function (response) {
+        var slug = response.data.data.slug;
+
+        _this2.$router.push({
+          name: 'show',
+          params: {
+            slug: slug
+          }
+        });
+      })["catch"](function (error) {
+        if (error.response.status === 422) _this2.getErrors(error.response.data.errors);
+      });
+    },
+    getErrors: function getErrors(errors) {
+      var _this3 = this;
+
+      this.errors = [];
+      Object.values(errors).forEach(function (value) {
+        _this3.errors.push(value[0]);
+      });
+    }
   },
   computed: {
     buttonTitle: function buttonTitle() {
@@ -20262,6 +20287,26 @@ var render = function() {
                 }
               },
               [
+                _vm.errors.length > 0
+                  ? _c(
+                      "div",
+                      {
+                        staticClass:
+                          "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-5",
+                        attrs: { role: "alert" }
+                      },
+                      [
+                        _c(
+                          "ul",
+                          _vm._l(_vm.errors, function(e) {
+                            return _c("li", [_vm._v(_vm._s(e))])
+                          }),
+                          0
+                        )
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
                 _c("div", { staticClass: "md:flex md:items-center mb-6" }, [
                   _c("input", {
                     directives: [
@@ -20668,7 +20713,7 @@ var render = function() {
                 {
                   staticClass: "text-sm md:text-base font-normal text-gray-600"
                 },
-                [_vm._v("Published 19 February 2019")]
+                [_vm._v(_vm._s(_vm.book.attributes.created_at))]
               ),
               _vm._v(" "),
               _c("p", { staticClass: "py-6" }, [

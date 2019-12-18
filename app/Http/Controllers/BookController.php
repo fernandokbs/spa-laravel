@@ -64,7 +64,7 @@ class BookController extends Controller
     {
         $this->authorize('update', $book);
 
-        $book->update($request->all());
+        $book->update($this->validateData());
         return (new BookResource(Book::find($book->id)))
             ->response()
             ->setStatusCode(Response::HTTP_OK);
@@ -123,8 +123,7 @@ class BookController extends Controller
         return request()->validate([
             'title' => 'required',
             'content' => 'required',
-            'thumbnail' => 'required',
-            'author_id' => 'required'
+            'thumbnail' => 'required'
         ]);
     }
 }

@@ -19,7 +19,6 @@ class CreateBooksTable extends Migration
             $table->string('thumbnail');
             $table->string('slug')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('author_id');            
             $table->text('content');
             $table->timestamps();
         });
