@@ -1,17 +1,17 @@
 <template>
     <div>
-        <h1 class="text-center text-3xl">Create Book</h1>
-        <BookForm action="create" :book="book"></BookForm>
+        <h1 class="text-center text-3xl">Create Article</h1>
+        <ArticleForm action="create" :article="article"></ArticleForm>
     </div>
 </template>
 
 <script>
-    import BookForm from '../components/BookForm';
+    import ArticleForm from '../components/ArticleForm';
 
     export default {
         data() {
             return {
-                book: {
+                article: {
                     'attributes' : {
                         'title' : '',
                         'content' : ''
@@ -21,7 +21,7 @@
         },
 
         components: {
-            BookForm
+            ArticleForm
         },
     }
 </script>

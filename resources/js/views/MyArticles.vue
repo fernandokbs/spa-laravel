@@ -2,14 +2,14 @@
     <div>
         <h1 class="text-center text-6xl font-medium">Personal posts</h1>
         <div class="text-right">
-            <button @click="create" class="bg-blue-500 py-4 px-4 text-white rounded">Crear book</button>
+            <button @click="create" class="bg-blue-500 py-4 px-4 text-white rounded">Crear Article</button>
         </div>
-        <BookList endpoint='/api/my_books'></BookList>
+        <ArticleList endpoint='/api/my_articles'></ArticleList>
     </div>
 </template>
 
 <script>
-    import BookList from '../components/BookList';
+    import ArticleList from '../components/ArticleList';
 
     export default {
         data() {
@@ -17,7 +17,7 @@
         },
 
         components: {
-            BookList
+            ArticleList
         },
 
         methods: {

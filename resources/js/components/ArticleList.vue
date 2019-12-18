@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="flex flex-wrap justify-center">
-            <div @click="show(book.slug)" v-for="book of books" :key="book.id" class="max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4">
-                <img class="w-full" :src="book.attributes.picture" alt="Sunset in the mountains">
+            <div @click="show(article.slug)" v-for="article of articles" :key="article.id" class="max-w-sm rounded overflow-hidden shadow-lg mx-4 my-4">
+                <img class="w-full" :src="article.attributes.picture" alt="Sunset in the mountains">
                 <div class="px-6 py-4">
-                    <div class="font-bold text-xl mb-2">{{ book.attributes.title }}</div>
+                    <div class="font-bold text-xl mb-2">{{ article.attributes.title }}</div>
                     <p class="text-gray-700 text-base">
-                        {{ book.attributes.content }} ...
+                        {{ article.attributes.content }} ...
                     </p>
                 </div>
 
@@ -30,7 +30,7 @@
     export default {
         data() {
             return {
-                books: [],
+                articles: [],
                 pagination: {}
             }
         },
@@ -38,14 +38,16 @@
         props: ['endpoint'],
         
         created() {
-            this.fetchBooks();
+            this.fetchArticles();
         },
 
         methods: {
-            fetchBooks(page = this.endpoint) {
+            fetchArticles(page = this.endpoint) {
                 axios.get(page)
                     .then(response => {
-                        this.books = response.data.data;
+                        console.log(page);
+                        this.articles = response.data.data;
+                        console.log(this.articles);
                         this.makePagination({ ...response.data.meta, ...response.data.links })
                     }).catch(e => {
                         console.log(e);
@@ -57,7 +59,7 @@
             },
 
             doPagination(page) {
-                this.fetchBooks(`${this.endpoint}?page=${page}`);
+                this.fetchArticles(`${this.endpoint}?page=${page}`);
             },
 
             show(slug) {

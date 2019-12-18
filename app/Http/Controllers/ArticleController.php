@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use App\Book;
+use App\Article;
 use App\Comment;
 use Illuminate\Http\Request;
-use App\Http\Resources\BookResource;
+use App\Http\Resources\ArticleResource;
 use App\Http\Resources\CommentResource;
 use Symfony\Component\HttpFoundation\Response;
 
-class BookController extends Controller
+class ArticleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,8 +19,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Book::class);
-        return BookResource::collection(Book::paginate(5));
+        $this->authorize('viewAny', Article::class);
+        return ArticleResource::collection(Article::paginate(5));
     }
 
     /**
@@ -31,11 +31,11 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Book::class);
-        $book = request()->user()->books()->create($this->validateData());
+        $this->authorize('create', Article::class);
+        $Article = request()->user()->Articles()->create($this->validateData());
 
-        BookResource::withoutWrapping();
-        return (new BookResource($book))
+        ArticleResource::withoutWrapping();
+        return (new ArticleResource($Article))
                 ->response()
                 ->setStatusCode(Response::HTTP_CREATED);
     }
@@ -43,29 +43,29 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Book  $book
+     * @param  \App\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function show(Book $book)
+    public function show(Article $Article)
     {
-        $this->authorize('view', $book);
-        BookResource::withoutWrapping();
-        return new BookResource($book);
+        $this->authorize('view', $Article);
+        ArticleResource::withoutWrapping();
+        return new ArticleResource($Article);
     }
     
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Book  $book
+     * @param  \App\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Article $Article)
     {
-        $this->authorize('update', $book);
+        $this->authorize('update', $Article);
 
-        $book->update($this->validateData());
-        return (new BookResource(Book::find($book->id)))
+        $Article->update($this->validateData());
+        return (new ArticleResource(Article::find($Article->id)))
             ->response()
             ->setStatusCode(Response::HTTP_OK);
     }
@@ -73,23 +73,23 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Book  $book
+     * @param  \App\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Book $book)
+    public function destroy(Article $Article)
     {
-        $this->authorize('delete', $book);
-        $book->delete();
+        $this->authorize('delete', $Article);
+        $Article->delete();
         return response([], Response::HTTP_NO_CONTENT);
     }
 
     /**
      *  Store a newly created resource in storage.
      *
-     * @param  \App\Book  $book
+     * @param  \App\Article  $Article
      * @return \Illuminate\Http\Response
      */
-    public function comment(Request $request, Book $book)
+    public function comment(Request $request, Article $Article)
     {
         $request->validate([
             'title' => 'required',
@@ -99,7 +99,7 @@ class BookController extends Controller
 
         $data = $request->all();
         $data['user_id'] = $request->user()->id;
-        $comment = $book->comments()->create($data);
+        $comment = $Article->comments()->create($data);
         
         CommentResource::withoutWrapping();
         return (new CommentResource($comment))
@@ -107,15 +107,15 @@ class BookController extends Controller
                 ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function comments(Book $book)
+    public function comments(Article $Article)
     {
-        return CommentResource::collection($book->comments);
+        return CommentResource::collection($Article->comments);
     }
 
-    public function myBooks()
+    public function myArticles()
     {
         $user = Auth::user();
-        return BookResource::collection($user->books()->paginate(3)); 
+        return ArticleResource::collection($user->Articles()->paginate(3)); 
     }
     
     public function validateData()

@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Book;
+use App\Article;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Collection;
-use App\Observers\BookObserver;
+use App\Observers\ArticleObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +26,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Book::observe(BookObserver::class);
+        Article::observe(ArticleObserver::class);
     }
 }

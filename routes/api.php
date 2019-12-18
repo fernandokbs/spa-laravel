@@ -1,9 +1,9 @@
 <?php
 
 Route::middleware('auth:api')->group(function() {
-    Route::apiResource('/books', 'BookController');
-    Route::post('/books/{book}/comment', 'BookController@comment');
-    Route::get('/books/{book}/comments', 'BookController@comments');
-    Route::get('/my_books', 'BookController@myBooks');
+    Route::apiResource('/articles', 'ArticleController');
+    Route::post('/articles/{articles}/comment', 'ArticleController@comment');
+    Route::get('/articles/{articles}/comments', 'ArticleController@comments');
+    Route::get('/my_articles', 'ArticleController@myArticles');
     Route::get('/authors', 'AuthorController@index');
 });

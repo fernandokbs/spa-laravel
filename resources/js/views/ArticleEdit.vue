@@ -1,22 +1,22 @@
 <template>
     <div>
-        <h1 class="text-center text-3xl">Edit book</h1>
-        <BookForm action="edit" :book="book"></BookForm>
+        <h1 class="text-center text-3xl">Edit Article</h1>
+        <ArticleForm action="edit" :article="article"></ArticleForm>
     </div>
 </template>
 
 <script>
-    import BookForm from '../components/BookForm';
+    import ArticleForm from '../components/ArticleForm';
 
     export default {
         data() {
             return {
-                book: {},
+                article: {},
             }
         },
 
         components: {
-            BookForm
+            ArticleForm
         },
 
         created() { 
@@ -25,19 +25,14 @@
 
         methods: {
             fetch() {
-                axios.get('/api/books/' + this.$route.params.slug)
+                axios.get('/api/articles/' + this.$route.params.slug)
                     .then(response => {
-                        this.book = response.data;
-                        console.log(this.book);
+                        this.article = response.data;
                     })
                     .catch(error => {
                         console.log(error);
                     });
             },
-
-            submit() {
-                
-            }
         }
     }
 </script>

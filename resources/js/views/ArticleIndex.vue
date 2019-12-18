@@ -1,11 +1,11 @@
 <template>
     <div>
-        <BookList endpoint='/api/books'></BookList>
+        <ArticleList endpoint='/api/articles'></ArticleList>
     </div>
 </template>
 
 <script>
-    import BookList from '../components/BookList';
+    import ArticleList from '../components/ArticleList';
 
     export default {
         data() {
@@ -13,7 +13,7 @@
         },
         
         components: {
-            BookList
+            ArticleList
         },
 
         created() {

@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 use App\Comment;
 use App\Author;
 use App\User;
-use App\Book;
+use App\Article;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,8 +22,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         factory(User::class)->create();
-        factory(Author::class)->times(10)->create();
-        factory(Book::class)->times(20)->create();
+        factory(Article::class)->times(20)->create();
         factory(Comment::class)->times(10)->create();
     }
 }
