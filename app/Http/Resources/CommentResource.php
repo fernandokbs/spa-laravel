@@ -22,6 +22,10 @@ class CommentResource extends JsonResource
                 'score' => $this->score,
                 'created_at' => $this->created_at->diffForHumans()
             ],
+
+            'relationships' => [
+                'author' => new AuthorResource($this->user)
+            ],
         ];
     }
 }

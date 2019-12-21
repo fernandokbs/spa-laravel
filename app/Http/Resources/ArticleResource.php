@@ -29,6 +29,10 @@ class ArticleResource extends JsonResource
                 'picture' => $this->thumbnail,
                 'created_at' => $this->created_at->diffForHumans()
             ],
+
+            'relationships' => [
+                'author' => new AuthorResource($this->user)
+            ]
         ];
     }
 }

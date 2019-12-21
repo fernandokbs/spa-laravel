@@ -43,7 +43,9 @@
 
     <div class="container justify-center w-full flex flex-wrap mx-auto px-2 pt-2 lg:pt-16 mt-2">
          <div class="w-full p-8 mt-6 text-gray-900">
-            <router-view></router-view>
+            <!-- <transition name="view" appear enter-active-class="animated zoomInRight" leave-active-class="animated zoomOutLeft"> -->
+               <router-view></router-view>
+            <!-- </transition> -->
          </div>
       </div>
     </div>

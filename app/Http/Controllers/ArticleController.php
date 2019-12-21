@@ -106,9 +106,9 @@ class ArticleController extends Controller
                 ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function comments(Article $Article)
+    public function comments(Article $article)
     {
-        return CommentResource::collection($Article->comments);
+        return CommentResource::collection($article->comments);
     }
 
     public function myArticles()
